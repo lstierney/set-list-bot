@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SetListBot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h3>Generate Playlist from Setlist</h3>
+<form id="setlistForm" action="upload" method="post" enctype="multipart/form-data">
+    <div class="grid-container">
+        <div class="grid-item">
+            <label for="playlistName">Playlist Name:</label><br>
+            <input type="text" id="playlistName" name="playlistName" placeholder="Enter name of playlist to be created" required>
+        </div>
+
+        <div class="grid-item">
+            <label for="file">Choose Setlist:</label><br>
+            <input type="file" id="file" name="file" accept=".docx" placeholder=".docx file" required>
+        </div>
+
+        <div class="grid-item">
+            <button type="submit" id="uploadButton">Upload</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>
