@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FileMatcherServiceImpl implements FileMatcherService {
+public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
     @Value("${audiofiles.base.path}")
     private String baseFolderPath;
 
-    public Map<Song, Path> matchSongsToFiles(List<Song> songs, int threshold) {
+    public Map<Song, Path> matchSongsToAudioFiles(List<Song> songs, int threshold) {
         Path baseFolder = Paths.get(baseFolderPath);
         List<Path> audioFiles;
 

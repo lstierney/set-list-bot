@@ -3,27 +3,24 @@ package uk.seaofgreen.setlistbot.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
+import uk.seaofgreen.setlistbot.utils.TestUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class SongServiceTest {
-    private static final String FILE_NAME = "HowlinWolf.Oct.2025.docx";
     private SongService songService;
     private MultipartFile testMultipartFile;
 
     @BeforeEach
     void setup() throws Exception {
         songService = new SongServiceImpl();
-        testMultipartFile = getTestMultipartFile();
+        testMultipartFile = TestUtils.getTestMultipartFile();
     }
 
     @Test
@@ -68,15 +65,5 @@ public class SongServiceTest {
         assertThat(song.key(), is("C"));
     }
 
-    private MultipartFile getTestMultipartFile() throws IOException {
-        Path path = Path.of("src/test/resources/setlists/" + FILE_NAME);
-        byte[] content = Files.readAllBytes(path);
 
-        return new MockMultipartFile(
-                "file",
-                FILE_NAME,
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                content
-        );
-    }
 }

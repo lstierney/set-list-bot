@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
-import uk.seaofgreen.setlistbot.service.FileMatcherService;
+import uk.seaofgreen.setlistbot.service.AudioFileMatcherService;
 import uk.seaofgreen.setlistbot.service.PlayListService;
 import uk.seaofgreen.setlistbot.service.SongService;
 
@@ -23,12 +23,12 @@ public class SetListControllerImpl implements SetListController {
     private static final Logger logger = LoggerFactory.getLogger(SetListControllerImpl.class);
 
     private final SongService songService;
-    private final FileMatcherService fileMatcherService;
+    private final AudioFileMatcherService audioFileMatcherService;
     private final PlayListService playListService;
 
-    public SetListControllerImpl(SongService songService, FileMatcherService fileMatcherService, PlayListService playListService) {
+    public SetListControllerImpl(SongService songService, AudioFileMatcherService audioFileMatcherService, PlayListService playListService) {
         this.songService = songService;
-        this.fileMatcherService = fileMatcherService;
+        this.audioFileMatcherService = audioFileMatcherService;
         this.playListService = playListService;
     }
 
@@ -42,7 +42,7 @@ public class SetListControllerImpl implements SetListController {
         logger.info("Playlist name: {}", playlistName);
 
         List<Song> results = songService.parseSetList(file);
-        Map<Song, Path> songPathMap = fileMatcherService.matchSongsToFiles(results, 85);
+        Map<Song, Path> songPathMap = audioFileMatcherService.matchSongsToAudioFiles(results, 85);
         String playlist = playListService.buildPlaylist(songPathMap, playlistName);
 
         byte[] playlistBytes = playlist.getBytes(StandardCharsets.UTF_8);

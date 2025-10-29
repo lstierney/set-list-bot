@@ -6,6 +6,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-public interface FileMatcherService {
-    Map<Song, Path> matchSongsToFiles(List<Song> songs, int threshold);
+public interface AudioFileMatcherService {
+    Map<Song, Path> matchSongsToAudioFiles(List<Song> songs, int threshold);
 }

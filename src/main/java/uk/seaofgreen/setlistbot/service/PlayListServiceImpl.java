@@ -56,7 +56,6 @@ public class PlayListServiceImpl implements PlayListService {
                 trackTitle.setTextContent(capitalizeWords(song.title()) + " (" + song.key() + ")");
                 track.appendChild(trackTitle);
 
-                // No creator info
                 trackList.appendChild(track);
             }
 
