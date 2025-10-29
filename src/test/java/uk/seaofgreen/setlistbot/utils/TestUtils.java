@@ -20,7 +20,7 @@ public class TestUtils {
     }
 
     public static Song getSong2() {
-        return new Song("Why I Sing the Blues", "C");
+        return new Song("Why I Sing The Blues", "C");
     }
 
     public static Song getSong3() {

@@ -34,8 +34,9 @@ public class AudioFileMatcherServiceTest {
 
         // Then
         assertThat(songPaths.size(), is(songs.size()));
-        assertThat(songPaths.get(songs.get(0)), is(Path.of("src\\test\\resources\\audio\\Walking_Blues_G.wav")));
-        assertThat(songPaths.get(songs.get(1)), is(Path.of("src\\test\\resources\\audio\\Why I Sing the Blues_C_Orig.mp3")));
-        assertThat(songPaths.get(songs.get(2)), is(Path.of("src\\test\\resources\\audio\\Suzie Q_E.wav")));
+        assertThat(songPaths.get(songs.get(0)), is(Path.of("src", "test", "resources", "audio", "Walking_Blues_G.wav")));
+        assertThat(songPaths.get(songs.get(1)), is(Path.of("src", "test", "resources", "audio", "Why I Sing the Blues_C_Orig.mp3")));
+        assertThat(songPaths.get(songs.get(2)), is(Path.of("src", "test", "resources", "audio", "Suzie Q_E.wav")));
+
     }
 }
