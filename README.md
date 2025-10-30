@@ -13,7 +13,7 @@ SetListBot is a Spring Boot application that generates XSPF compliant playlists 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/lstierney/setlistbot.git
+git clone git@github.com:lstierney/set-list-bot.git
 cd setlistbot
 ```
 

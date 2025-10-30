@@ -1,6 +1,7 @@
 package uk.seaofgreen.setlistbot.service;
 
 import uk.seaofgreen.setlistbot.model.Song;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,6 +19,8 @@ import org.w3c.dom.Element;
 
 @Service
 public class PlayListServiceImpl implements PlayListService {
+    @Value("${PLAYLIST_AUDIO_BASE_PATH}")
+    private String playListAudioBasePath;
 
     @Override
     public String buildPlaylist(Map<Song, Path> songPathMap, String playlistTitle) {
@@ -49,7 +52,9 @@ public class PlayListServiceImpl implements PlayListService {
                 Element track = doc.createElement("track");
 
                 Element location = doc.createElement("location");
-                location.setTextContent(path.toUri().toString());
+                String pathAsUri = path.toAbsolutePath().toUri().toString();
+
+                location.setTextContent(pathAsUri);
                 track.appendChild(location);
 
                 Element trackTitle = doc.createElement("title");
@@ -85,4 +90,3 @@ public class PlayListServiceImpl implements PlayListService {
         return String.join(" ", words);
     }
 }
-

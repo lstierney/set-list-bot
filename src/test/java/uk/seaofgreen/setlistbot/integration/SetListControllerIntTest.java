@@ -2,6 +2,7 @@ package uk.seaofgreen.setlistbot.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -24,7 +25,8 @@ public class SetListControllerIntTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String BASE_PATH = "src/test/resources/audio/";
+    @Value("${PLAYLIST_AUDIO_BASE_PATH}")
+    private String playListAudioBasePath;
 
     @Test
     void uploadSetlist_withRealFile_generatesExactPlaylist() throws Exception {
@@ -49,7 +51,7 @@ public class SetListControllerIntTest {
 
         // Assert tracks
         expectedTracks.forEach((fileName, title) -> {
-            String path = Paths.get(BASE_PATH, fileName).toUri().toString();
+            String path = Paths.get(playListAudioBasePath, fileName).toUri().toString();
             assert content.contains("<location>" + path + "</location>");
             assert content.contains("<title>" + title + "</title>");
         });

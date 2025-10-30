@@ -20,7 +20,7 @@ public class AudioFileMatcherServiceTest {
     @BeforeEach
     void setup() {
         audioFileMatcherService = new AudioFileMatcherServiceImpl();
-        ReflectionTestUtils.setField(audioFileMatcherService, "baseFolderPath", AUDIO_FILES_BASE_PATH);
+        ReflectionTestUtils.setField(audioFileMatcherService, "audioFileSearchPath", AUDIO_FILES_BASE_PATH);
     }
 
     @Test

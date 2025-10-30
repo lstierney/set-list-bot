@@ -16,11 +16,11 @@ import java.util.Map;
 
 @Service
 public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
-    @Value("${audiofiles.base.path}")
-    private String baseFolderPath;
+    @Value("${AUDIO_FILE_SEARCH_PATH}")
+    private String audioFileSearchPath;
 
     public Map<Song, Path> matchSongsToAudioFiles(List<Song> songs, int threshold) {
-        Path baseFolder = Paths.get(baseFolderPath);
+        Path baseFolder = Paths.get(audioFileSearchPath);
         List<Path> audioFiles;
 
         try {

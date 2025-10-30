@@ -2,6 +2,7 @@ package uk.seaofgreen.setlistbot.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.utils.TestUtils;
 
@@ -21,6 +22,7 @@ public class PlayListServiceTest {
     @BeforeEach
     void setup() {
         playListService = new PlayListServiceImpl();
+        ReflectionTestUtils.setField(playListService, "playListAudioBasePath", "src/test/resources/audio/");
     }
 
     @Test
