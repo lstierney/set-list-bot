@@ -55,10 +55,13 @@ public class PlayListServiceImpl implements PlayListService {
                 if (path == null) continue; // skip unmatched
 
                 Song song = entry.getKey();
-                Element track = doc.createElement("track");
+                logger.info("Adding <track> for Song: '{}'", song);
 
+                Element track = doc.createElement("track");
                 Element location = doc.createElement("location");
+
                 String pathAsUri = path.toAbsolutePath().toUri().toString();
+                logger.info("pathAsUri: '{}'", pathAsUri);
 
                 location.setTextContent(pathAsUri);
                 track.appendChild(location);
