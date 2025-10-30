@@ -4,8 +4,9 @@ services:
     container_name: setlistbot
     ports:
       - "7777:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=live
+    env_file:
+      - .env
     volumes:
-      - "/mnt/fileserver/My Documents/Guitar/Bands/The Best Dressed Blues Band/Tunes:/mnt/fileserver/My Documents/Guitar/Bands/The Best Dressed Blues Band/Tunes"
+      - "${AUDIO_BASE_PATH}:/audio:ro"
     restart: unless-stopped
+
