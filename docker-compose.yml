@@ -2,13 +2,13 @@ services:
   setlistbot:
     image: ghcr.io/lstierney/setlistbot:latest
     environment:
-      - AUDIO_FILE_SEARCH_PATH=${AUDIO_FILE_SEARCH_PATH}
+      - AUDIO_FILE_LOCATION=${AUDIO_FILE_LOCATION}
     container_name: setlistbot
     ports:
       - "7777:8080"
     env_file:
       - .env
     volumes:
-      - "${AUDIO_FILE_SEARCH_PATH}:/audio:ro"
+      - "${AUDIO_FILE_LOCATION}:/audio:ro"
     restart: unless-stopped
 

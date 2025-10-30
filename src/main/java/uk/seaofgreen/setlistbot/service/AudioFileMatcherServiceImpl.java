@@ -1,6 +1,8 @@
 package uk.seaofgreen.setlistbot.service;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.seaofgreen.setlistbot.exception.SetListBotException;
@@ -16,10 +18,14 @@ import java.util.Map;
 
 @Service
 public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
+    private static final Logger logger = LoggerFactory.getLogger(AudioFileMatcherServiceImpl.class);
+
     @Value("${AUDIO_FILE_SEARCH_PATH}")
     private String audioFileSearchPath;
 
     public Map<Song, Path> matchSongsToAudioFiles(List<Song> songs, int threshold) {
+        logger.info("Calling with audioFileSearchPath: '{}'", audioFileSearchPath);
+
         Path baseFolder = Paths.get(audioFileSearchPath);
         List<Path> audioFiles;
 
