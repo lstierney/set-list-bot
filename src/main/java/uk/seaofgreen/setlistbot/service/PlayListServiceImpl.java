@@ -1,5 +1,7 @@
 package uk.seaofgreen.setlistbot.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.seaofgreen.setlistbot.model.Song;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,12 @@ public class PlayListServiceImpl implements PlayListService {
     @Value("${PLAYLIST_AUDIO_BASE_PATH}")
     private String playListAudioBasePath;
 
+    private static final Logger logger = LoggerFactory.getLogger(PlayListServiceImpl.class);
+
     @Override
     public String buildPlaylist(Map<Song, Path> songPathMap, String playlistTitle) {
+        logger.info("Building playlist with playListAudioBasePath: '{}'", playListAudioBasePath);
+
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
