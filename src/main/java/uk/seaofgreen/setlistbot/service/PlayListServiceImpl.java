@@ -13,6 +13,11 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -60,10 +65,7 @@ public class PlayListServiceImpl implements PlayListService {
                 Element track = doc.createElement("track");
                 Element location = doc.createElement("location");
 
-                String pathAsUri = path.toAbsolutePath().toUri().toString();
-                logger.info("pathAsUri: '{}'", pathAsUri);
-
-                location.setTextContent(pathAsUri);
+                location.setTextContent(playListAudioBasePath + getEncodedFileName(path));
                 track.appendChild(location);
 
                 Element trackTitle = doc.createElement("title");
@@ -84,7 +86,7 @@ public class PlayListServiceImpl implements PlayListService {
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
             return writer.toString();
 
-        } catch (ParserConfigurationException | TransformerException e) {
+        } catch (ParserConfigurationException | TransformerException | UnsupportedEncodingException e) {
             throw new RuntimeException("Error building XSPF playlist", e);
         }
     }
@@ -97,5 +99,13 @@ public class PlayListServiceImpl implements PlayListService {
             }
         }
         return String.join(" ", words);
+    }
+
+    public static String getEncodedFileName(Path path) throws UnsupportedEncodingException {
+        String fileName = path.getFileName().toString();
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8)
+                .replace("+", "%20"); // URLEncoder encodes spaces as +, but URIs use %20
+        logger.info("encodedFileName: '{}'", encodedFileName);
+        return encodedFileName;
     }
 }

@@ -16,17 +16,18 @@ import static org.hamcrest.Matchers.is;
 
 public class PlayListServiceTest {
     private static final String PLAYLIST_TITLE = "Binkies_22_10_25";
+    private static final String PLAYLIST_AUDIO_BASE_PATH = "src/test/resources/audio/";
 
     private PlayListService playListService;
 
     @BeforeEach
     void setup() {
         playListService = new PlayListServiceImpl();
-        ReflectionTestUtils.setField(playListService, "playListAudioBasePath", "src/test/resources/audio/");
+        ReflectionTestUtils.setField(playListService, "playListAudioBasePath", PLAYLIST_AUDIO_BASE_PATH);
     }
 
     @Test
-    public void buildPlaylist_happyPath() {
+    public void buildPlaylist_happyPath() throws Exception {
         // Given
         List<Song> songs = TestUtils.getSongs();
         Map<Song, Path> songPathMap = new LinkedHashMap<>();
@@ -45,8 +46,7 @@ public class PlayListServiceTest {
         sb.append("  <trackList>\n");
         for (Map.Entry<Song, Path> entry : songPathMap.entrySet()) {
             sb.append("    <track>\n");
-            String uri = entry.getValue().toAbsolutePath().toUri().toString(); // OS-independent absolute URI
-            sb.append("      <location>").append(uri).append("</location>\n");
+            sb.append("      <location>").append(PLAYLIST_AUDIO_BASE_PATH + PlayListServiceImpl.getEncodedFileName(entry.getValue())).append("</location>\n");
             sb.append("      <title>").append(entry.getKey().title()).append(" (").append(entry.getKey().key()).append(")</title>\n");
             sb.append("    </track>\n");
         }

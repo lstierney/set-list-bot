@@ -10,8 +10,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import uk.seaofgreen.setlistbot.service.PlayListServiceImpl;
 import uk.seaofgreen.setlistbot.utils.TestUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
@@ -51,9 +54,15 @@ public class SetListControllerIntTest {
 
         // Assert tracks
         expectedTracks.forEach((fileName, title) -> {
-            String path = Paths.get(playListAudioBasePath, fileName).toUri().toString();
-            assert content.contains("<location>" + path + "</location>");
-            assert content.contains("<title>" + title + "</title>");
+            Path path = Paths.get(playListAudioBasePath, fileName);
+            try {
+                String encodedFileName = PlayListServiceImpl.getEncodedFileName(path);
+                assert content.contains("<location>" + playListAudioBasePath + encodedFileName + "</location>");
+                assert content.contains("<title>" + title + "</title>");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+
         });
     }
 }
