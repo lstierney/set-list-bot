@@ -46,7 +46,7 @@ public class PlayListServiceTest {
         sb.append("  <trackList>\n");
         for (Map.Entry<Song, Path> entry : songPathMap.entrySet()) {
             sb.append("    <track>\n");
-            sb.append("      <location>").append(PLAYLIST_AUDIO_BASE_PATH + PlayListServiceImpl.getEncodedFileName(entry.getValue())).append("</location>\n");
+            sb.append("      <location>").append(PlayListServiceImpl.toFileUri(PLAYLIST_AUDIO_BASE_PATH + entry.getValue().getFileName().toString())).append("</location>\n");
             sb.append("      <title>").append(entry.getKey().title()).append(" (").append(entry.getKey().key()).append(")</title>\n");
             sb.append("    </track>\n");
         }

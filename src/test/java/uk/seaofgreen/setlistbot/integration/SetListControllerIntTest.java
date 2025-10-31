@@ -55,14 +55,9 @@ public class SetListControllerIntTest {
         // Assert tracks
         expectedTracks.forEach((fileName, title) -> {
             Path path = Paths.get(playListAudioBasePath, fileName);
-            try {
-                String encodedFileName = PlayListServiceImpl.getEncodedFileName(path);
-                assert content.contains("<location>" + playListAudioBasePath + encodedFileName + "</location>");
-                assert content.contains("<title>" + title + "</title>");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-
+            String encodedPath = PlayListServiceImpl.toFileUri(playListAudioBasePath + path.getFileName().toString());
+            assert content.contains("<location>" + encodedPath + "</location>");
+            assert content.contains("<title>" + title + "</title>");
         });
     }
 }
