@@ -1,6 +1,24 @@
 # SetListBot
 
-SetListBot is a Spring Boot application that generates XSPF compliant playlists from Word setlists. The app runs in Docker for easy deployment.
+SetListBot is a Spring Boot application that generates XSPF compliant playlists from Word (docx) "setlists". The app runs in Docker for easy deployment.
+
+## Example
+
+```
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<playlist xmlns="http://xspf.org/ns/0/" version="1">
+  <title>Howlin_Wolf_25_10_2025</title>
+  <trackList>
+    <track>
+      <location>file:///mnt/fileserver/audio/Why%20I%20Sing%20the%20Blues_C_Orig.mp3</location>
+      <title>Why I Sing The Blues (C)</title>
+    </track>
+    <track>
+      <location>file:///mnt/fileserver/audio/Worried%20Life%20Blues%20(C).mp3</location>
+      <title>Worried Life Blues (C)</title>
+    </track>
+    ... etc ...
+```
 
 ## Prerequisites
 
@@ -20,7 +38,7 @@ cd setlistbot
 ### 2. Create and configure .env
 Edit .env to point to the folder containing your audio files e.g:
 
-`AUDIO_BASE_PATH=/home/user/Music/SetlistTunes`
+`AUDIO_FILE_LOCATION=/home/user/Music/SetlistTunes`
 
 ### 3. Start the application with Docker Compose
 `docker-compose up -d`
@@ -28,7 +46,6 @@ Edit .env to point to the folder containing your audio files e.g:
 This will:
 
 * Pull or build the SetListBot Docker image
-* Start the container with the live Spring profile
 * Mount your audio files into the container at /audio
 
 ### Access the app
@@ -36,6 +53,5 @@ This will:
 Open your browser at http://localhost:7777
 
 ### Notes
-* The live Spring profile is always used, ensuring the app reads audio files from the mounted volume.
-* Make sure the AUDIO_BASE_PATH directory exists and contains your audio files before starting the container.
+* Make sure the AUDIO_FILE_LOCATION directory exists and contains your audio files before starting the container. Only this directory will be searched. A recursive search WILL NOT be performed.
 * The container is set to restart unless stopped, so it will automatically recover from host reboots.
