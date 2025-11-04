@@ -1,8 +1,8 @@
 # SetListBot
 
-SetListBot is a Spring Boot application that generates XSPF compliant playlists from Word (docx) "setlists". The app runs in Docker for easy deployment.
+SetListBot is a Spring Boot application that generates [XSPF compliant playlists](https://www.xspf.org/) from Word (docx) "setlists". The app runs in Docker for easy deployment.
 
-## Example
+## Example Output
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class AudioFileMatcherServiceTest {
     private static final String AUDIO_FILES_BASE_PATH = "src/test/resources/audio/";
@@ -37,6 +38,20 @@ public class AudioFileMatcherServiceTest {
         assertThat(songPaths.get(songs.get(0)), is(Path.of("src", "test", "resources", "audio", "Walking_Blues_G.wav")));
         assertThat(songPaths.get(songs.get(1)), is(Path.of("src", "test", "resources", "audio", "Why I Sing the Blues_C_Orig.mp3")));
         assertThat(songPaths.get(songs.get(2)), is(Path.of("src", "test", "resources", "audio", "Suzie Q_E.wav")));
+    }
+
+    @Test
+    public void matchSongsToAudioFiles_shouldNotSearchSubDirs() {
+        // Given
+        int threshold = 85;
+        List<Song>songs = TestUtils.getSongs();
+        songs.add(TestUtils.getArchiveSong()); // this should never match as it only exists in nested folder
+
+        // When
+        Map<Song, Path> songPaths = audioFileMatcherService.matchSongsToAudioFiles(songs, threshold);
+
+        // Then
+        assertThat(songPaths.get(songs.get(3)), nullValue()); // path is null as it didnt match
 
     }
 }
