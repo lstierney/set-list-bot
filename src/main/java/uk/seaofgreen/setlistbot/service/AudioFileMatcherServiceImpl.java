@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.exception.SetListBotException;
 import uk.seaofgreen.setlistbot.model.Song;
 
@@ -23,7 +24,7 @@ public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
     @Value("${AUDIO_FILE_SEARCH_PATH}")
     private String audioFileSearchPath;
 
-    public Map<Song, Path> matchSongsToAudioFiles(List<Song> songs, int threshold) {
+    public AudioFileMatcherResults matchSongsToAudioFiles(List<Song> songs, int threshold) {
         logger.info("Calling with audioFileSearchPath: '{}'", audioFileSearchPath);
 
         Path baseFolder = Paths.get(audioFileSearchPath);
@@ -62,7 +63,7 @@ public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
             matches.put(song, bestScore >= threshold ? bestMatch : null);
         }
 
-        return matches;
+        return AudioFileMatcherResults.fromSongPathMap(matches);
     }
 
     private String normalize(String input) {

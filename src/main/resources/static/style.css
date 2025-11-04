@@ -66,3 +66,18 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+#unmatchedSongs {
+    grid-column: 1 / -1;  /* span all columns of the grid */
+    background-color: #ffe6e6; /* light red/pink background */
+    border: 1px solid #ff4d4d; /* red border */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    color: #b30000; /* dark red text */
+    font-weight: bold;
+}
+
+#unmatchedSongs:empty {
+    display: none;
+}

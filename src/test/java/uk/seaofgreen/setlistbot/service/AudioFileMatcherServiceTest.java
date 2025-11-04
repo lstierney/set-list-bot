@@ -3,6 +3,7 @@ package uk.seaofgreen.setlistbot.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.utils.TestUtils;
 
@@ -13,6 +14,8 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AudioFileMatcherServiceTest {
     private static final String AUDIO_FILES_BASE_PATH = "src/test/resources/audio/";
@@ -31,13 +34,14 @@ public class AudioFileMatcherServiceTest {
         int threshold = 85;
 
         // When
-        Map<Song, Path> songPaths = audioFileMatcherService.matchSongsToAudioFiles(songs, threshold);
+        AudioFileMatcherResults audioFileMatcherResults = audioFileMatcherService.matchSongsToAudioFiles(songs, threshold);
+        Map<Song, Path> matches = audioFileMatcherResults.getMatches();
 
         // Then
-        assertThat(songPaths.size(), is(songs.size()));
-        assertThat(songPaths.get(songs.get(0)), is(Path.of("src", "test", "resources", "audio", "Walking_Blues_G.wav")));
-        assertThat(songPaths.get(songs.get(1)), is(Path.of("src", "test", "resources", "audio", "Why I Sing the Blues_C_Orig.mp3")));
-        assertThat(songPaths.get(songs.get(2)), is(Path.of("src", "test", "resources", "audio", "Suzie Q_E.wav")));
+        assertThat(matches.size(), is(songs.size()));
+        assertThat(matches.get(songs.get(0)), is(Path.of("src", "test", "resources", "audio", "Walking_Blues_G.wav")));
+        assertThat(matches.get(songs.get(1)), is(Path.of("src", "test", "resources", "audio", "Why I Sing the Blues_C_Orig.mp3")));
+        assertThat(matches.get(songs.get(2)), is(Path.of("src", "test", "resources", "audio", "Suzie Q_E.wav")));
     }
 
     @Test
@@ -45,13 +49,16 @@ public class AudioFileMatcherServiceTest {
         // Given
         int threshold = 85;
         List<Song>songs = TestUtils.getSongs();
-        songs.add(TestUtils.getArchiveSong()); // this should never match as it only exists in nested folder
+        Song archiveSong = TestUtils.getArchiveSong();
+        songs.add(archiveSong); // this should never match as it only exists in nested folder
 
         // When
-        Map<Song, Path> songPaths = audioFileMatcherService.matchSongsToAudioFiles(songs, threshold);
+        AudioFileMatcherResults audioFileMatcherResults = audioFileMatcherService.matchSongsToAudioFiles(songs, threshold);
 
         // Then
-        assertThat(songPaths.get(songs.get(3)), nullValue()); // path is null as it didnt match
-
+        assertThat(audioFileMatcherResults.getMatches().size(), is(3));
+        assertThat(audioFileMatcherResults.getNotMatched().size(), is(1));
+        assertTrue(audioFileMatcherResults.getNotMatched().contains(archiveSong));
+        assertFalse(audioFileMatcherResults.getMatches().containsKey(archiveSong));
     }
 }

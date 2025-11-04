@@ -10,16 +10,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.service.AudioFileMatcherService;
 import uk.seaofgreen.setlistbot.service.PlayListService;
 import uk.seaofgreen.setlistbot.service.SongService;
 import uk.seaofgreen.setlistbot.utils.TestUtils;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -53,28 +54,25 @@ public class SetListControllerImplTest {
     }
 
     @Test
-    void convertSetListToPlayList_returnsExpectedPlaylistBytes() {
+    void convertSetListToPlayList_successReturnsExpectedPlaylistBytes() throws IOException {
         // Given
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "test.docx",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "fake content".getBytes()
-        );
+        MockMultipartFile file = TestUtils.getTestMultipartFile();
         String playlistName = "MyPlaylist";
 
         Song song = TestUtils.getSong1();
         List<Song> parsedSongs = List.of(song);
 
-        Map<Song, Path> songPathMap = Map.of(song, Path.of("/tmp/Walking_Blues_G.wav"));
+        AudioFileMatcherResults audioFileMatcherResults = new AudioFileMatcherResults();
+        audioFileMatcherResults.addMatch(song, Path.of("/tmp/Walking_Blues_G.wav"));
+
         String playlistXml = "<playlist>FAKE_XML</playlist>";
 
         given(songService.parseSetList(file)).willReturn(parsedSongs);
-        given(audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85)).willReturn(songPathMap);
-        given(playListService.buildPlaylist(songPathMap, playlistName)).willReturn(playlistXml);
+        given(audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85)).willReturn(audioFileMatcherResults);
+        given(playListService.buildPlaylist(audioFileMatcherResults.getMatches(), playlistName)).willReturn(playlistXml);
 
         // When
-        ResponseEntity<byte[]> response = controller.convertSetListToPlayList(file, playlistName);
+        ResponseEntity<byte[]> response = (ResponseEntity<byte[]>) controller.convertSetListToPlayList(file, playlistName);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -85,7 +83,37 @@ public class SetListControllerImplTest {
 
         then(songService).should().parseSetList(file);
         then(audioFileMatcherService).should().matchSongsToAudioFiles(parsedSongs, 85);
-        then(playListService).should().buildPlaylist(songPathMap, playlistName);
+        then(playListService).should().buildPlaylist(audioFileMatcherResults.getMatches(), playlistName);
+    }
+
+    @Test
+    void convertSetListToPlayList_returnsJsonWhenSongsNotMatched() throws IOException {
+        // Given
+        MockMultipartFile file = TestUtils.getTestMultipartFile();
+        String playlistName = "MyPlaylist";
+
+        Song song = TestUtils.getSong1();
+        List<Song> parsedSongs = List.of(song);
+
+        AudioFileMatcherResults audioFileMatcherResults = new AudioFileMatcherResults();
+        audioFileMatcherResults.addNotMatched(song);
+
+        String playlistXml = "<playlist>FAKE_XML</playlist>";
+
+        given(songService.parseSetList(file)).willReturn(parsedSongs);
+        given(audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85)).willReturn(audioFileMatcherResults);
+
+        // When
+        ResponseEntity<Map<String, List<Song>>> response = (ResponseEntity<Map<String, List<Song>>>) controller.convertSetListToPlayList(file, playlistName);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat(response.getHeaders().getContentType().toString(), is("application/json"));
+        assertThat(response.getBody().get("unmatchedSongs").get(0), is(song));
+
+        then(songService).should().parseSetList(file);
+        then(audioFileMatcherService).should().matchSongsToAudioFiles(parsedSongs, 85);
+        org.mockito.Mockito.verifyNoInteractions(playListService);
     }
 }
 

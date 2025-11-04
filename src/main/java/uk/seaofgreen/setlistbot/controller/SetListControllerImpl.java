@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.service.AudioFileMatcherService;
 import uk.seaofgreen.setlistbot.service.PlayListService;
 import uk.seaofgreen.setlistbot.service.SongService;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -34,23 +34,30 @@ public class SetListControllerImpl implements SetListController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<byte[]> convertSetListToPlayList(
+    public ResponseEntity<?> convertSetListToPlayList(
             @RequestParam("file") MultipartFile file,
             @RequestParam("playlistName") String playlistName) {
 
-        logger.info("Received file: {}", file.getOriginalFilename());
-        logger.info("Playlist name: {}", playlistName);
+        logger.info("Received file: '{}'", file.getOriginalFilename());
+        logger.info("Playlist name: '{}'", playlistName);
 
-        List<Song> results = songService.parseSetList(file);
-        Map<Song, Path> songPathMap = audioFileMatcherService.matchSongsToAudioFiles(results, 85);
-        String playlist = playListService.buildPlaylist(songPathMap, playlistName);
+        List<Song> parsedSongs = songService.parseSetList(file);
+        AudioFileMatcherResults audioFileMatcherResults = audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85);
 
-        byte[] playlistBytes = playlist.getBytes(StandardCharsets.UTF_8);
+        if (audioFileMatcherResults.getNotMatched().isEmpty()) { // All songs matched = return playlist
+            String playlist = playListService.buildPlaylist(audioFileMatcherResults.getMatches(), playlistName);
+            byte[] playlistBytes = playlist.getBytes(StandardCharsets.UTF_8);
 
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + playlistName + ".xspf" + "\"")
-                .contentType(MediaType.APPLICATION_XML)
-                .contentLength(playlistBytes.length)
-                .body(playlistBytes);
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"" + playlistName + ".xspf\"")
+                    .contentType(MediaType.APPLICATION_XML)
+                    .contentLength(playlistBytes.length)
+                    .body(playlistBytes);
+        } else { // Some songs unmatched = return JSON with unmatched song details
+            return ResponseEntity.badRequest()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("unmatchedSongs", audioFileMatcherResults.getNotMatched()));
+        }
     }
+
 }
