@@ -27,6 +27,10 @@ public class TestUtils {
         return new Song("Suzie Q", "E");
     }
 
+    public static Song getArchiveSong() {
+        return new Song("Archived Song", "G");
+    }
+
     public static List<Song>getSongs() {
         List<Song> songs = new ArrayList<>();
         songs.add(getSong1());

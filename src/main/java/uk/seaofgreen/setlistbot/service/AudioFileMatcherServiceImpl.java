@@ -30,7 +30,8 @@ public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
         List<Path> audioFiles;
 
         try {
-            audioFiles = Files.walk(baseFolder)
+            // list = top level only, walk = traverse sub-dirs too
+            audioFiles = Files.list(baseFolder)
                     .filter(Files::isRegularFile)
                     .toList();
         } catch (IOException e) {
