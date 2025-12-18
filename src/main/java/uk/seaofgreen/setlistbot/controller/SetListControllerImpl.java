@@ -34,12 +34,8 @@ public class SetListControllerImpl implements SetListController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResponseEntity<?> convertSetListToPlayList(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("playlistName") String playlistName) {
-
-        logger.info("Received file: '{}'", file.getOriginalFilename());
-        logger.info("Playlist name: '{}'", playlistName);
+    public ResponseEntity<?> convertSetListToPlayList(@RequestParam("file") MultipartFile file, @RequestParam("playlistName") String playlistName) {
+        logger.info("originalFilename: '{}', Playlist name: '{}'", file.getOriginalFilename(), playlistName);
 
         List<Song> parsedSongs = songService.parseSetList(file);
         AudioFileMatcherResults audioFileMatcherResults = audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85);

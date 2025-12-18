@@ -56,7 +56,7 @@ public class SetListControllerImplTest {
     @Test
     void convertSetListToPlayList_successReturnsExpectedPlaylistBytes() throws IOException {
         // Given
-        MockMultipartFile file = TestUtils.getTestMultipartFile();
+        MockMultipartFile file = TestUtils.getSetListWithKeys();
         String playlistName = "MyPlaylist";
 
         Song song = TestUtils.getSong1();
@@ -89,7 +89,7 @@ public class SetListControllerImplTest {
     @Test
     void convertSetListToPlayList_returnsJsonWhenSongsNotMatched() throws IOException {
         // Given
-        MockMultipartFile file = TestUtils.getTestMultipartFile();
+        MockMultipartFile file = TestUtils.getSetListWithKeys();
         String playlistName = "MyPlaylist";
 
         Song song = TestUtils.getSong1();
