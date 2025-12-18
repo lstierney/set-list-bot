@@ -42,3 +42,32 @@ document.getElementById('setlistForm').addEventListener('submit', async (e) => {
         console.error(err);
     }
 });
+
+const input = document.getElementById('extraSongInput');
+const textarea = document.getElementById('extraSongs');
+const addBtn = document.getElementById('addExtraSong');
+const clearBtn = document.getElementById('clearExtraSongs');
+
+// Start with default extras
+textarea.value = "Let the Good Times Roll\nLeaving Trunk";
+let defaultShown = true;
+
+addBtn.addEventListener('click', () => {
+    const value = input.value.trim();
+    if (!value) return;
+
+    // If default list is showing, overwrite it
+    if (defaultShown) {
+        textarea.value = value;
+        defaultShown = false;
+    } else {
+        // Otherwise, append new song
+        textarea.value += '\n' + value;
+    }
+
+    input.value = '';
+});
+
+clearBtn.addEventListener('click', () => {
+    textarea.value = '';
+});
