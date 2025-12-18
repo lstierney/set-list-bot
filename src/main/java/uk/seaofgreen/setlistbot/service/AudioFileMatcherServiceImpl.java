@@ -32,9 +32,7 @@ public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
 
         try {
             // list = top level only, walk = traverse sub-dirs too
-            audioFiles = Files.list(baseFolder)
-                    .filter(Files::isRegularFile)
-                    .toList();
+            audioFiles = Files.list(baseFolder).filter(Files::isRegularFile).toList();
         } catch (IOException e) {
             throw new SetListBotException(e);
         }
@@ -42,7 +40,7 @@ public class AudioFileMatcherServiceImpl implements AudioFileMatcherService {
         Map<Song, Path> matches = new LinkedHashMap<>();
 
         for (Song song : songs) {
-            String songTitle = normalize(song.title());
+            String songTitle = normalize(song.getTitle());
             Path bestMatch = null;
             int bestScore = 0;
 

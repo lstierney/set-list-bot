@@ -1,7 +1,6 @@
 package uk.seaofgreen.setlistbot.utils;
 
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
 
 import java.io.IOException;
@@ -13,7 +12,8 @@ import java.util.List;
 public class TestUtils {
     private TestUtils() {}
 
-    public static final String TEST_SETLIST_FILENAME = "HowlinWolf.Oct.2025.docx";
+    public static final String SETLIST_WITH_KEYS = "HowlinWolf.Oct.2025.docx";
+    public static final String SETLIST_NUMBERED_NO_KEYS = "Rehearsal withPete.docx";
 
     public static Song getSong1() {
         return new Song("Walking Blues", "G");
@@ -39,13 +39,21 @@ public class TestUtils {
         return songs;
     }
 
-    public static MockMultipartFile getTestMultipartFile() throws IOException {
-        Path path = Path.of("src/test/resources/setlists/" + TEST_SETLIST_FILENAME);
+    public static MockMultipartFile getSetListWithKeys() throws IOException {
+        return getSetList(SETLIST_WITH_KEYS);
+    }
+
+    public static MockMultipartFile getSetListNumberedNoKeys() throws IOException {
+        return getSetList(SETLIST_NUMBERED_NO_KEYS);
+    }
+
+    private static MockMultipartFile getSetList(String setListFileName) throws IOException {
+        Path path = Path.of("src/test/resources/setlists/" + setListFileName);
         byte[] content = Files.readAllBytes(path);
 
         return new MockMultipartFile(
                 "file",
-                TEST_SETLIST_FILENAME,
+                setListFileName,
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 content
         );

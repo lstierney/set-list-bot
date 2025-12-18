@@ -27,7 +27,7 @@ public class PlayListServiceTest {
     }
 
     @Test
-    public void buildPlaylist_happyPath() throws Exception {
+    public void buildPlaylist_happyPath() {
         // Given
         List<Song> songs = TestUtils.getSongs();
         Map<Song, Path> songPathMap = new LinkedHashMap<>();
@@ -47,7 +47,7 @@ public class PlayListServiceTest {
         for (Map.Entry<Song, Path> entry : songPathMap.entrySet()) {
             sb.append("    <track>\n");
             sb.append("      <location>").append(PlayListServiceImpl.toFileUri(PLAYLIST_AUDIO_BASE_PATH + entry.getValue().getFileName().toString())).append("</location>\n");
-            sb.append("      <title>").append(entry.getKey().title()).append(" (").append(entry.getKey().key()).append(")</title>\n");
+            sb.append("      <title>").append(entry.getKey().getTitle()).append(" (").append(entry.getKey().getKey()).append(")</title>\n");
             sb.append("    </track>\n");
         }
         sb.append("  </trackList>\n");

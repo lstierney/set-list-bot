@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import uk.seaofgreen.setlistbot.service.PlayListServiceImpl;
 import uk.seaofgreen.setlistbot.utils.TestUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class SetListControllerIntTest {
 
     @Test
     void uploadSetlist_withRealFile_generatesExactPlaylist() throws Exception {
-        MockMultipartFile file = TestUtils.getTestMultipartFile();
+        MockMultipartFile file = TestUtils.getSetListWithKeys();
         String playlistName = "Binkies_20_10_25";
 
         Map<String, String> expectedTracks = Map.of(

@@ -59,6 +59,10 @@ public class PlayListServiceImpl implements PlayListService {
                 Song song = entry.getKey();
                 logger.info("Adding <track> for Song: '{}'", song);
 
+                if (song.getKey() == null) {
+                    song.setKey(getKeyFromAudioFileName(path));
+                }
+
                 Element track = doc.createElement("track");
                 Element location = doc.createElement("location");
 
@@ -66,7 +70,8 @@ public class PlayListServiceImpl implements PlayListService {
                 track.appendChild(location);
 
                 Element trackTitle = doc.createElement("title");
-                trackTitle.setTextContent(capitalizeWords(song.title()) + " (" + song.key() + ")");
+                String keyForPlayList = song.getKey() == null ? "" : " (" + song.getKey() + ")";
+                trackTitle.setTextContent(capitalizeWords(song.getTitle()) + keyForPlayList);
                 track.appendChild(trackTitle);
 
                 trackList.appendChild(track);
@@ -87,6 +92,39 @@ public class PlayListServiceImpl implements PlayListService {
             throw new RuntimeException("Error building XSPF playlist", e);
         }
     }
+
+    private String getKeyFromAudioFileName(Path path) {
+        String audioFileName = path.getFileName().toString();
+        logger.info("audioFileName: '{}'", audioFileName);
+
+        // Strip extension
+        String baseName = audioFileName.replaceFirst("\\.[^.]+$", "");
+
+        // 1. Check for parenthetical key: (C), (G#), etc.
+        var parenMatch = java.util.regex.Pattern.compile("\\(([A-Ga-g][#b]?)\\)")
+                .matcher(baseName);
+        if (parenMatch.find()) {
+            return parenMatch.group(1).toUpperCase();
+        }
+
+        // 2. Check for underscore-separated key at end: _C, _G#, _D_Orig, etc.
+        var underscoreMatch = java.util.regex.Pattern.compile("_([A-Ga-g][#b]?)(_|$)")
+                .matcher(baseName);
+        if (underscoreMatch.find()) {
+            return underscoreMatch.group(1).toUpperCase();
+        }
+
+        // 3. Check for trailing single letter after space: "Who's Been Talking A"
+        var trailingLetterMatch = java.util.regex.Pattern.compile("\\s([A-Ga-g])$")
+                .matcher(baseName);
+        if (trailingLetterMatch.find()) {
+            return trailingLetterMatch.group(1).toUpperCase();
+        }
+
+        // 4. No valid key found
+        return null;
+    }
+
 
     private String capitalizeWords(String input) {
         String[] words = input.split("\\s+");
