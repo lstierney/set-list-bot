@@ -72,7 +72,7 @@ public class SetListControllerImplTest {
         given(playListService.buildPlaylist(audioFileMatcherResults.getMatches(), playlistName)).willReturn(playlistXml);
 
         // When
-        ResponseEntity<byte[]> response = (ResponseEntity<byte[]>) controller.convertSetListToPlayList(file, playlistName);
+        ResponseEntity<byte[]> response = (ResponseEntity<byte[]>) controller.convertSetListToPlayList(file, playlistName, "");
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -104,7 +104,7 @@ public class SetListControllerImplTest {
         given(audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85)).willReturn(audioFileMatcherResults);
 
         // When
-        ResponseEntity<Map<String, List<Song>>> response = (ResponseEntity<Map<String, List<Song>>>) controller.convertSetListToPlayList(file, playlistName);
+        ResponseEntity<Map<String, List<Song>>> response = (ResponseEntity<Map<String, List<Song>>>) controller.convertSetListToPlayList(file, playlistName, "");
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));

@@ -20,6 +20,16 @@
         </div>
 
         <div class="grid-item">
+            <label for="extraSongs">Extra songs (optional):</label>
+            <div>
+                <input type="text" id="extraSongInput" placeholder="Enter song name">
+                <button type="button" id="addExtraSong">Add</button>
+                <button type="button" id="clearExtraSongs">Clear</button>
+            </div>
+            <textarea id="extraSongs" name="extraSongs" rows="3" readonly></textarea>
+        </div>
+
+        <div class="grid-item">
             <button type="submit" id="uploadButton">Generate</button>
         </div>
 

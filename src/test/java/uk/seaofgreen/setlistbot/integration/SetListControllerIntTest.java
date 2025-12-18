@@ -43,7 +43,10 @@ public class SetListControllerIntTest {
 
         String content = mockMvc.perform(MockMvcRequestBuilders.multipart("/upload")
                         .file(file)
-                        .param("playlistName", playlistName))
+                        .param("playlistName", playlistName)
+                        .param("goodTimes", "false")
+                        .param("leavingTrunk", "false")
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_XML))
                 .andExpect(header().string("Content-Disposition", "attachment; filename=\"" + playlistName + ".xspf\""))

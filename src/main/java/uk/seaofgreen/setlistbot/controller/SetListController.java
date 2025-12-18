@@ -4,5 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SetListController {
-    ResponseEntity<?> convertSetListToPlayList(MultipartFile file, String playlistName);
+    ResponseEntity<?> convertSetListToPlayList(
+            MultipartFile file,
+            String playlistName,
+            String extraSongs
+    );
 }
