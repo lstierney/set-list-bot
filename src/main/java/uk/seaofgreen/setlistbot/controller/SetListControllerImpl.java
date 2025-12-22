@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,4 +67,10 @@ public class SetListControllerImpl implements SetListController {
         }
     }
 
+    @GetMapping("/extraSongs")
+    public List<Song>getExtraSongs() {
+        List<Song> extraSongs = songService.getExtraSongs();
+        logger.info("extraSongs: '{}'", extraSongs);
+        return extraSongs;
+    }
 }

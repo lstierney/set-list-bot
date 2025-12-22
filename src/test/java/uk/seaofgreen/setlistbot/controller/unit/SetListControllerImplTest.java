@@ -1,4 +1,4 @@
-package uk.seaofgreen.setlistbot.controller;
+package uk.seaofgreen.setlistbot.controller.unit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import uk.seaofgreen.setlistbot.controller.SetListControllerImpl;
 import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.service.AudioFileMatcherService;
@@ -19,6 +20,7 @@ import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 
 @ExtendWith(MockitoExtension.class)
 public class SetListControllerImplTest {
@@ -98,8 +99,6 @@ public class SetListControllerImplTest {
         AudioFileMatcherResults audioFileMatcherResults = new AudioFileMatcherResults();
         audioFileMatcherResults.addNotMatched(song);
 
-        String playlistXml = "<playlist>FAKE_XML</playlist>";
-
         given(songService.parseSetList(file)).willReturn(parsedSongs);
         given(audioFileMatcherService.matchSongsToAudioFiles(parsedSongs, 85)).willReturn(audioFileMatcherResults);
 
@@ -114,6 +113,33 @@ public class SetListControllerImplTest {
         then(songService).should().parseSetList(file);
         then(audioFileMatcherService).should().matchSongsToAudioFiles(parsedSongs, 85);
         org.mockito.Mockito.verifyNoInteractions(playListService);
+    }
+
+    @Test
+    void getExtraSongs_happyPath() {
+        // Given
+        given(songService.getExtraSongs()).willReturn(TestStubs.getSongs());
+
+        // When
+        List<Song>extraSongs = songService.getExtraSongs();
+
+        // Then
+        assertThat(extraSongs.size(), is(3));
+        assertThat(extraSongs.get(0).getTitle(), is("Walking Blues"));
+        assertThat(extraSongs.get(1).getTitle(), is("Why I Sing The Blues"));
+        assertThat(extraSongs.get(2).getTitle(), is("Suzie Q"));
+    }
+
+    @Test
+    void getExtraSongs_noSongsFound() {
+        // Given
+        given(songService.getExtraSongs()).willReturn(new ArrayList<>());
+
+        // When
+        List<Song>extraSongs = songService.getExtraSongs();
+
+        // Then
+        assertThat(extraSongs.size(), is(0));
     }
 }
 

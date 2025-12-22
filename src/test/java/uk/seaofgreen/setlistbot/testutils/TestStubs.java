@@ -14,6 +14,7 @@ public class TestStubs {
 
     public static final String SETLIST_WITH_KEYS = "HowlinWolf.Oct.2025.docx";
     public static final String SETLIST_NUMBERED_NO_KEYS = "Rehearsal withPete.docx";
+    public static final String DEFAULT_EXTRA_SONGS = "Leaving Trunk, Let the Good Times Roll";
 
     public static Song getSong1() {
         return new Song("Walking Blues", "G");
