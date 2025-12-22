@@ -3,7 +3,7 @@ package uk.seaofgreen.setlistbot.dto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.seaofgreen.setlistbot.model.Song;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AudioFileMatcherResultsTest {
 
     @Test
     public void testMatches() {
-        Song song = TestUtils.getSong1();
+        Song song = TestStubs.getSong1();
         Path path = Path.of("/some/path");
 
         audioFileMatcherResults.addMatch(song, path);
@@ -40,7 +40,7 @@ public class AudioFileMatcherResultsTest {
 
     @Test
     public void testNotMatched() {
-        Song song = TestUtils.getSong1();
+        Song song = TestStubs.getSong1();
 
         audioFileMatcherResults.addNotMatched(song);
 

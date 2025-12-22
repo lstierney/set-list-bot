@@ -15,7 +15,7 @@ import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.service.AudioFileMatcherService;
 import uk.seaofgreen.setlistbot.service.PlayListService;
 import uk.seaofgreen.setlistbot.service.SongService;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,10 +56,10 @@ public class SetListControllerImplTest {
     @Test
     void convertSetListToPlayList_successReturnsExpectedPlaylistBytes() throws IOException {
         // Given
-        MockMultipartFile file = TestUtils.getSetListWithKeys();
+        MockMultipartFile file = TestStubs.getSetListWithKeys();
         String playlistName = "MyPlaylist";
 
-        Song song = TestUtils.getSong1();
+        Song song = TestStubs.getSong1();
         List<Song> parsedSongs = List.of(song);
 
         AudioFileMatcherResults audioFileMatcherResults = new AudioFileMatcherResults();
@@ -89,10 +89,10 @@ public class SetListControllerImplTest {
     @Test
     void convertSetListToPlayList_returnsJsonWhenSongsNotMatched() throws IOException {
         // Given
-        MockMultipartFile file = TestUtils.getSetListWithKeys();
+        MockMultipartFile file = TestStubs.getSetListWithKeys();
         String playlistName = "MyPlaylist";
 
-        Song song = TestUtils.getSong1();
+        Song song = TestStubs.getSong1();
         List<Song> parsedSongs = List.of(song);
 
         AudioFileMatcherResults audioFileMatcherResults = new AudioFileMatcherResults();

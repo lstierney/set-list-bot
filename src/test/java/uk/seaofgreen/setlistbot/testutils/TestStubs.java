@@ -1,4 +1,4 @@
-package uk.seaofgreen.setlistbot.utils;
+package uk.seaofgreen.setlistbot.testutils;
 
 import org.springframework.mock.web.MockMultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
@@ -9,8 +9,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestUtils {
-    private TestUtils() {}
+public class TestStubs {
+    private TestStubs() {}
 
     public static final String SETLIST_WITH_KEYS = "HowlinWolf.Oct.2025.docx";
     public static final String SETLIST_NUMBERED_NO_KEYS = "Rehearsal withPete.docx";

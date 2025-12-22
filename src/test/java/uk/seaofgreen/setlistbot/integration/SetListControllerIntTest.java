@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import uk.seaofgreen.setlistbot.service.PlayListServiceImpl;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,7 +32,7 @@ public class SetListControllerIntTest {
 
     @Test
     void uploadSetlist_withRealFile_generatesExactPlaylist() throws Exception {
-        MockMultipartFile file = TestUtils.getSetListWithKeys();
+        MockMultipartFile file = TestStubs.getSetListWithKeys();
         String playlistName = "Binkies_20_10_25";
 
         Map<String, String> expectedTracks = Map.of(

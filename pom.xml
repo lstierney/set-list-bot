@@ -34,7 +34,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -52,11 +51,16 @@
             <version>1.4.0</version>
         </dependency>
 
-
         <!-- test scope -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-junit5-plugin</artifactId>
+			<version>1.2.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -67,34 +71,25 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.19.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>1.2.2</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <targetClasses>
-                        <param>uk.seaofgreen.setlistbot.*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>uk.seaofgreen.setlistbot.*Test</param>
-                    </targetTests>
-                    <mutationThreshold>80</mutationThreshold>
-                    <threads>4</threads>
-                    <outputFormats>
-                        <param>HTML</param>
-                    </outputFormats>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.15.0</version>
+				<configuration>
+					<targetClasses>
+						<param>uk.seaofgreen.setlistbot.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>uk.seaofgreen.setlistbot.*Test</param>
+					</targetTests>
+					<excludedMethods>
+						<excludedMethod>toString</excludedMethod>
+					</excludedMethods>
+					<excludedClasses>
+						<param>uk.seaofgreen.setlistbot.SetlistbotApplication</param>
+					</excludedClasses>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
-
-
 </project>

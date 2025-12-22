@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,8 +22,8 @@ public class SongServiceTest {
     @BeforeEach
     void setup() throws Exception {
         songService = new SongServiceImpl();
-        setListWithKeys = TestUtils.getSetListWithKeys();
-        setListNumberedNoKeys = TestUtils.getSetListNumberedNoKeys();
+        setListWithKeys = TestStubs.getSetListWithKeys();
+        setListNumberedNoKeys = TestStubs.getSetListNumberedNoKeys();
     }
 
     @Test
