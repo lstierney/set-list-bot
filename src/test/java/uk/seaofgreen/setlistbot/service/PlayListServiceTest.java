@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.seaofgreen.setlistbot.model.Song;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -27,9 +27,9 @@ public class PlayListServiceTest {
     }
 
     @Test
-    public void buildPlaylist_happyPath() {
+    void buildPlaylistXml_happyPath() {
         // Given
-        List<Song> songs = TestUtils.getSongs();
+        List<Song> songs = TestStubs.getSongs();
         Map<Song, Path> songPathMap = new LinkedHashMap<>();
         songPathMap.put(songs.get(0), Path.of("src/test/resources/audio/Walking_Blues_G.wav"));
         songPathMap.put(songs.get(1), Path.of("src/test/resources/audio/Why I Sing The Blues_C_Orig.mp3"));

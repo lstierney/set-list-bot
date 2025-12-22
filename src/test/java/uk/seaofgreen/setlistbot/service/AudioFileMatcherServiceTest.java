@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.seaofgreen.setlistbot.dto.AudioFileMatcherResults;
 import uk.seaofgreen.setlistbot.model.Song;
-import uk.seaofgreen.setlistbot.utils.TestUtils;
+import uk.seaofgreen.setlistbot.testutils.TestStubs;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,9 +27,9 @@ public class AudioFileMatcherServiceTest {
     }
 
     @Test
-    public void matchSongsToAudioFiles_happyPath() {
+    void matchSongsToAudioFiles_happyPath() {
         // Given
-        List<Song>songs = TestUtils.getSongs();
+        List<Song>songs = TestStubs.getSongs();
         int threshold = 85;
 
         // When
@@ -45,11 +44,11 @@ public class AudioFileMatcherServiceTest {
     }
 
     @Test
-    public void matchSongsToAudioFiles_shouldNotSearchSubDirs() {
+    void matchSongsToAudioFiles_shouldNotSearchSubDirs() {
         // Given
         int threshold = 85;
-        List<Song>songs = TestUtils.getSongs();
-        Song archiveSong = TestUtils.getArchiveSong();
+        List<Song>songs = TestStubs.getSongs();
+        Song archiveSong = TestStubs.getArchiveSong();
         songs.add(archiveSong); // this should never match as it only exists in nested folder
 
         // When

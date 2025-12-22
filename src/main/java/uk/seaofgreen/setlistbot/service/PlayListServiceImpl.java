@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import uk.seaofgreen.setlistbot.util.AudioFileNameParser;
 
 @Service
 public class PlayListServiceImpl implements PlayListService {
@@ -60,7 +61,7 @@ public class PlayListServiceImpl implements PlayListService {
                 logger.info("Adding <track> for Song: '{}'", song);
 
                 if (song.getKey() == null) {
-                    song.setKey(getKeyFromAudioFileName(path));
+                    song.setKey(AudioFileNameParser.getKeyFromPath(path));
                 }
 
                 Element track = doc.createElement("track");
@@ -92,39 +93,6 @@ public class PlayListServiceImpl implements PlayListService {
             throw new RuntimeException("Error building XSPF playlist", e);
         }
     }
-
-    private String getKeyFromAudioFileName(Path path) {
-        String audioFileName = path.getFileName().toString();
-        logger.info("audioFileName: '{}'", audioFileName);
-
-        // Strip extension
-        String baseName = audioFileName.replaceFirst("\\.[^.]+$", "");
-
-        // 1. Check for parenthetical key: (C), (G#), etc.
-        var parenMatch = java.util.regex.Pattern.compile("\\(([A-Ga-g][#b]?)\\)")
-                .matcher(baseName);
-        if (parenMatch.find()) {
-            return parenMatch.group(1).toUpperCase();
-        }
-
-        // 2. Check for underscore-separated key at end: _C, _G#, _D_Orig, etc.
-        var underscoreMatch = java.util.regex.Pattern.compile("_([A-Ga-g][#b]?)(_|$)")
-                .matcher(baseName);
-        if (underscoreMatch.find()) {
-            return underscoreMatch.group(1).toUpperCase();
-        }
-
-        // 3. Check for trailing single letter after space: "Who's Been Talking A"
-        var trailingLetterMatch = java.util.regex.Pattern.compile("\\s([A-Ga-g])$")
-                .matcher(baseName);
-        if (trailingLetterMatch.find()) {
-            return trailingLetterMatch.group(1).toUpperCase();
-        }
-
-        // 4. No valid key found
-        return null;
-    }
-
 
     private String capitalizeWords(String input) {
         String[] words = input.split("\\s+");
