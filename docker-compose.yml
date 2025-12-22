@@ -3,6 +3,7 @@ services:
     image: ghcr.io/lstierney/setlistbot:latest
     environment:
       - AUDIO_FILE_LOCATION=${AUDIO_FILE_LOCATION}
+      - DEFAULT_EXTRA_SONGS=${DEFAULT_EXTRA_SONGS}
     container_name: setlistbot
     ports:
       - "7777:8080"

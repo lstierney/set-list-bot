@@ -3,6 +3,7 @@ package uk.seaofgreen.setlistbot.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import uk.seaofgreen.setlistbot.model.Song;
 import uk.seaofgreen.setlistbot.testutils.TestStubs;
@@ -27,7 +28,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListWithKeysReturnsCorrectNumberOfSongs() {
+    void parseSetListWithKeysReturnsCorrectNumberOfSongs() {
         // When
         List<Song> songs = songService.parseSetList(setListWithKeys);
 
@@ -36,7 +37,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListWithKeysReturnsCorrectSongs_firstSong() throws IOException {
+    void parseSetListWithKeysReturnsCorrectSongs_firstSong() throws IOException {
         // When
         List<Song> songs = songService.parseSetList(setListWithKeys);
         Song song = songs.get(0);
@@ -47,7 +48,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListWithKeysReturnsCorrectSongs_lastSong() throws IOException {
+    void parseSetListWithKeysReturnsCorrectSongs_lastSong() throws IOException {
         // When
         List<Song> songs = songService.parseSetList(setListWithKeys);
         Song song = songs.get(songs.size() - 1);
@@ -58,7 +59,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListWithKeysReturnsCorrectSongs_middleSong() throws IOException {
+    void parseSetListWithKeysReturnsCorrectSongs_middleSong() throws IOException {
         // When
         List<Song> songs = songService.parseSetList(setListWithKeys);
         Song song = songs.get(11);
@@ -69,7 +70,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListNumberedNoKeysReturnsCorrectNumberOfSongs() {
+    void parseSetListNumberedNoKeysReturnsCorrectNumberOfSongs() {
         // When
         List<Song> songs = songService.parseSetList(setListNumberedNoKeys);
 
@@ -78,7 +79,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListNumberedNoKeysReturnsCorrectSongs_firstSong() {
+    void parseSetListNumberedNoKeysReturnsCorrectSongs_firstSong() {
         // When
         List<Song> songs = songService.parseSetList(setListNumberedNoKeys);
         Song song = songs.get(0);
@@ -89,7 +90,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListNumberedNoKeysReturnsCorrectSongs_lastSong() {
+    void parseSetListNumberedNoKeysReturnsCorrectSongs_lastSong() {
         // When
         List<Song> songs = songService.parseSetList(setListNumberedNoKeys);
         Song song = songs.get(9);
@@ -100,7 +101,7 @@ public class SongServiceTest {
     }
 
     @Test
-    public void parseSetListNumberedNoKeysReturnsCorrectSongs_middleSong() {
+    void parseSetListNumberedNoKeysReturnsCorrectSongs_middleSong() {
         // When
         List<Song> songs = songService.parseSetList(setListNumberedNoKeys);
         Song song = songs.get(5);
@@ -108,5 +109,61 @@ public class SongServiceTest {
         // Then
         assertThat(song.getTitle(), is("it hurts me too"));
         assertThat(song.getKey(), is(nullValue()));
+    }
+
+    /**
+     * @Override
+     *     public List<Song> getExtraSongs() {
+     *         List<String>titles = List.of(defaultExtraSongs.split(","));
+     *         List<Song>extraSongs = new ArrayList<>();
+     *
+     *         for(String title : titles) {
+     *             extraSongs.add(new Song(title, null));
+     *         }
+     *
+     *         return extraSongs;
+     *     }
+     */
+
+    @Test
+    void getExtraSongs_happyPath() {
+        // Given
+        ReflectionTestUtils.setField(songService, "defaultExtraSongs", TestStubs.DEFAULT_EXTRA_SONGS);
+
+        // When
+        List<Song> extraSongs = songService.getExtraSongs();
+
+        // Then
+        assertThat(extraSongs.size(), is(2));
+
+        assertThat(extraSongs.get(0).getTitle(), is("Leaving Trunk"));
+        assertThat(extraSongs.get(0).getKey(), is(nullValue()));
+
+        assertThat(extraSongs.get(1).getTitle(), is("Let the Good Times Roll"));
+        assertThat(extraSongs.get(1).getKey(), is(nullValue()));
+    }
+
+    @Test
+    void getExtraSongs_extraSongsIsEmpty() {
+        // Given
+        ReflectionTestUtils.setField(songService, "defaultExtraSongs", "");
+
+        // When
+        List<Song> extraSongs = songService.getExtraSongs();
+
+        // Then
+        assertThat(extraSongs.size(), is(0));
+    }
+
+    @Test
+    void getExtraSongs_extraSongsIsNull() {
+        // Given
+        ReflectionTestUtils.setField(songService, "defaultExtraSongs", null);
+
+        // When
+        List<Song> extraSongs = songService.getExtraSongs();
+
+        // Then
+        assertThat(extraSongs.size(), is(0));
     }
 }

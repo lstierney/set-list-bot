@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SongService {
     List<Song> parseSetList(MultipartFile file);
+
+    List<Song> getExtraSongs();
 }
