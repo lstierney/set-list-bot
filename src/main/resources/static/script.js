@@ -1,3 +1,5 @@
+const fileInput = document.getElementById('file');
+const playlistNameInput = document.getElementById('playlistName');
 const input = document.getElementById('extraSongInput');
 const textarea = document.getElementById('extraSongs');
 const addBtn = document.getElementById('addExtraSong');
@@ -13,6 +15,16 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (err) {
         console.error(err);
+    }
+});
+
+fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+        playlistNameInput.value = file.name
+            .replace(/\.[^.]+$/, '')       // strip extension
+            .replace(/\./g, '_')           // dots to underscores
+            .replace(/(_\d{4})\1+/g, '$1'); // remove consecutive duplicate years e.g. _2026_2026 -> _2026
     }
 });
 
